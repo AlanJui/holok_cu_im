@@ -5,7 +5,7 @@
 schema:
   schema_id: holok_cu_im.unspaced
   name: 河洛注音-無空格「反查字典」
-  version: "0.0.0.1"
+  version: "0.0.1.0"
   author:
     - 居正中 AlanJui <alanjui.1960@gmail.com>
   description: 研習用《河洛-注音》反查用的無空格辭典 Schema。

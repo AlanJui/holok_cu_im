@@ -5,7 +5,7 @@
 schema:
   schema_id: holok_cu_im
   name: 台語注音
-  version: "0.0.0.1"
+  version: "0.0.1.0"
   author:
     - 居正中 AlanJui <alanjui.1960@gmail.com>
   description: 基於萌典 API 的 RIME 臺語注音輸入法。
@@ -81,7 +81,8 @@ speller:
 translator:
   dictionary: holok_cu_im
   prism: cu_im
-  spelling_hints: 0
+  # spelling_hints: 0
+  spelling_hints: 5
   # enable_sentence: true
   preedit_format:
     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
@@ -97,7 +98,8 @@ learning:
   dictionary: holok_cu_im
   prism: cu_im
   tips: 《注音顯示》
-  spelling_hints: 6
+  # spelling_hints: 6
+  spelling_hints: 5
   prefix: "'"    # 啟動碼
   preedit_format:
     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
@@ -115,7 +117,8 @@ cu_im:
   prism: bopomofo_tw
   prefix: "`"    # 啟動碼
   # suffix: ;
-  spelling_hints: 6
+  # spelling_hints: 6
+  spelling_hints: 5
   preedit_format:
     - "xlit|1qaz2wsxedcrfv5tgbyhnujm8ik,9ol.0p;/- 6347'|ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦˉˊˇˋ˙ |"
     - xform/^/《中文反查》/
@@ -261,10 +264,18 @@ editor:
     Num_Lock: toggle_selection
     #### Return 鍵在 fluency editor 的設定下的預設功能已經是把所有字送上螢幕。
     # Return: confirm
+    #---------------------------------------------------
+    # space: commit                       # 選擇「備選漢字」
+    Return: commit_composition          # 上屏原始的輸入：lau5
+    Control+Return: commit_script_text  # 上屏顯示的輸入：lau⁵ / lâu
+    Shift+Return: commit_comment        # 上屏候選項備注：ㄉㄚ˪〖柳交五〗
+    # Control+Return: commit_raw_input    # 上屏原始的輸入：lau5
+    # Control+Return: confirm    # 上屏原始的輸入：lau5
 
 key_binder:
   # import_preset: default
   bindings:
+    #---------------------------------------------------
     #### 當有候選字列表時，space 的作用是 NumLock，如果沒有候選字列表但是有佇列時，space 的作用是把字送上螢幕。
     - { when: composing, accept: space, send: Return }
     - { when: has_menu, accept: space, send: Num_Lock }
@@ -281,9 +292,24 @@ key_binder:
     - { when: has_menu, accept: Control+7, send: KP_7 }
     - { when: has_menu, accept: Control+8, send: KP_8 }
     - { when: has_menu, accept: Control+9, send: KP_9 }
+    #---------------------------------------------------
+    # 翻頁
+    #---------------------------------------------------
+    - { accept: "Control+p", send: Page_Up, when: composing }
+    - { accept: "Control+n", send: Page_Down, when: composing }
+    #---------------------------------------------------
+    # Vim Mode
+    #---------------------------------------------------
+    # - { when: has_menu, accept: "Control+h", send: Page_Up }
+    # - { when: has_menu, accept: "Control+l", send: Page_Down }
+    - { when: has_menu, accept: "Control+h", send: Left }
+    - { when: has_menu, accept: "Control+l", send: Right }
+    - { when: has_menu, accept: "Control+k", send: Up }
+    - { when: has_menu, accept: "Control+j", send: Down }
 
 
 style:
+  horizontal: false
   #### ==========================================================================================
   #### RIME (Windows 小狼豪版) 使用微軟雅黑作為預設字型。雅黑支援所有的臺語注音符號，但是仍存在兩個問題：
   #### 1. 某些字不遵守正體漢字在臺灣的規範寫法。 (例如「骨」、「過」)
