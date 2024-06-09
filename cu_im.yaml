@@ -2,7 +2,7 @@
 
 #### 對於需要兩個或更多拉丁字母來標註的注音，要把他們在字典檔 (.dict.yaml) 中的拼寫轉換成單字母，才能建立鍵盤對應表。
 #### 因為 RIME 會逐行執行以下步驟，所以這裡的順序很重要，例如轉換 ㄑ/ㄘ 的規則必須要放在 ㄐ/ㄗ 前面，才不會讓所有 ㄑ/ㄘ 變成 ㄐ/ㄗ。
-pinyin_to_tsuim:
+phing_im_tng_cu_im:
   __append:
     - xform/tsh(?=i)/C/      # ㄑ -- tsh 後面接 i 時，tsh 為 ㄑ
     - xform/tsh/c/           # ㄘ
@@ -41,9 +41,9 @@ pinyin_to_tsuim:
     - xform/p(?=8)/9/        # ㆴ (2) -- 比對第八聲 (p 轉換為 ㆴ，8 會在其他規則中轉換為輕聲鍵)
     - xform/t4/>1/           # ㆵ (1) -- 以下規則請參考ㆴ的註解
     - xform/t(?=8)/>/        # ㆵ (2)
-    - xform/k4/<1/           # ㆻ (1) 
+    - xform/k4/<1/           # ㆻ (1)
     - xform/k(?=8)/</        # ㆻ (2)
-    - xform/h4/41/           # ㆷ (1) 
+    - xform/h4/41/           # ㆷ (1)
     - xform/h(?=8)/4/        # ㆷ (2)
 
 #### 簡化拼法表述式
@@ -91,6 +91,7 @@ keymap_bopomofo:
     - 'xlit|pbPmtTnlkgKGhZJCSzjcsaAOQoeEyYxX{}M0N[]RriIuU1239><4578|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|'
 
 #### ㄅㄆㄇ對應的按鍵轉換成螢幕顯示的符號
-bopomofo_symbols:
+bopomofo_hu_ho:
   __append:
     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
+

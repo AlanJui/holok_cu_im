@@ -1,0 +1,41 @@
+# Rime schema
+# vim: set sw=2 sts=2 et:
+# encoding: utf-8
+
+schema:
+  schema_id: holok_cu_im.unspaced
+  name: 河洛注音-無空格「反查字典」
+  version: "0.0.0.1"
+  author:
+    - 居正中 AlanJui <alanjui.1960@gmail.com>
+  description: 研習用《河洛-注音》反查用的無空格辭典 Schema。
+
+engine:
+  processors:
+    - speller
+    - express_editor
+  segmentors:
+    - abc_segmentor
+    - fallback_segmentor
+  translators:
+    - script_translator
+
+speller:
+  alphabet: '1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657'
+  initials: '1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ43btgz657'
+  finals: " 43657"
+  delimiter: "'"
+  use_space: true
+  algebra:
+    __patch:
+      - cu_im:/phing_im_tng_cu_im
+      - cu_im:/abbreviation
+      - cu_im:/keymap_bopomofo
+
+translator:
+  dictionary: holok_cu_im.unspaced
+  prism: cu_im.unspaced
+  spelling_hints: 0
+  preedit_format:
+    - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
+

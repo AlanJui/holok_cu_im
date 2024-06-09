@@ -3,16 +3,16 @@
 # encoding: utf-8
 
 schema:
-  schema_id: moetaigi-tsuim
-  name: 萌台語-注音
-  version: "0.3"
-  author: 
-    - 鄭懷傑 whyjz <whyjayzheng@gmail.com>
+  schema_id: holok_cu_im
+  name: 台語注音
+  version: "0.0.0.1"
+  author:
+    - 居正中 AlanJui <alanjui.1960@gmail.com>
   description: 基於萌典 API 的 RIME 臺語注音輸入法。
-  dependencies: 
-    - moetaigi.unspaced
+  dependencies:
+    - holok_cu_im.unspaced
   #   - luna_pinyin
-  #   - moetaigi-test
+  #   - holok-test
 
 switches:
   - name: ascii_mode
@@ -41,8 +41,8 @@ engine:
     - matcher
     - abc_segmentor
     - affix_segmentor@learning
-    - affix_segmentor@zhuyin
-    # - affix_segmentor@pinyin
+    - affix_segmentor@cu_im
+    # - affix_segmentor@cu_im
     - punct_segmentor
     - fallback_segmentor
     # - affix_segmentor@custom_reverse_lookup
@@ -54,12 +54,12 @@ engine:
     # - reverse_lookup_translator
     - script_translator@learning
     # - table_translator@bopomo_onion_phrase
-    - script_translator@zhuyin
+    - script_translator@cu_im
   filters:
     - simplifier
     - uniquifier
-    - reverse_lookup_filter@tsuim_reverse_lookup_hidepinyin
-    - reverse_lookup_filter@tsuim_reverse_lookup
+    - reverse_lookup_filter@cu_im_reverse_lookup_hide_cu_im
+    - reverse_lookup_filter@cu_im_reverse_lookup
     # - reverse_lookup_filter@bpm_reverse_lookup
 
 #### 候選字列表中的編號保持預設 (1234567...)。
@@ -74,28 +74,28 @@ speller:
   use_space: true
   algebra:
     __patch:
-      - tsuim:/pinyin_to_tsuim
-      - tsuim:/abbreviation
-      - tsuim:/keymap_bopomofo
+      - cu_im:/phing_im_tng_cu_im
+      - cu_im:/abbreviation
+      - cu_im:/keymap_bopomofo
 
 translator:
-  dictionary: moetaigi
-  prism: tsuim
+  dictionary: holok_cu_im
+  prism: cu_im
   spelling_hints: 0
   # enable_sentence: true
   preedit_format:
     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
   # comment_format:
   #   __patch:
-  #     - tsuim:/pinyin_to_tsuim
-  #     - tsuim:/keymap_bopomofo
-  #     - tsuim:/bopomofo_symbols
+  #     - cu_im:/phing_im_tng_cu_im
+  #     - cu_im:/keymap_bopomofo
+  #     - cu_im:/bopomofo_hu_ho
 
 #### 注音顯示模式的設定
 learning:
   tag: learning
-  dictionary: moetaigi
-  prism: tsuim
+  dictionary: holok_cu_im
+  prism: cu_im
   tips: 《注音顯示》
   spelling_hints: 6
   prefix: "'"    # 啟動碼
@@ -104,13 +104,13 @@ learning:
     - xform/^/《注音顯示》/
   comment_format:
     __patch:
-      - tsuim:/pinyin_to_tsuim
-      - tsuim:/keymap_bopomofo
-      - tsuim:/bopomofo_symbols
+      - cu_im:/phing_im_tng_cu_im
+      - cu_im:/keymap_bopomofo
+      - cu_im:/bopomofo_hu_ho
 
 #### 中文反查模式的設定 (1) -- 利用中文注音打出字
-zhuyin:
-  tag: zhuyin
+cu_im:
+  tag: cu_im
   dictionary: terra_pinyin # luna_pinyin
   prism: bopomofo_tw
   prefix: "`"    # 啟動碼
@@ -127,8 +127,8 @@ zhuyin:
   # initial_quality: 0.2  # 調整該編譯器出字優先度
 
 #### 中文注音反查的設定 (2) -- 對於不存在台語注音的漢字詞，在註解中把拼音隱藏起來，並顯示【無台語注音】
-tsuim_reverse_lookup_hidepinyin:
-  tags: [ zhuyin ]
+cu_im_reverse_lookup_hide_cu_im:
+  tags: [ cu_im ]
   overwrite_comment: true
   dictionary: terra_pinyin
   comment_format:
@@ -138,20 +138,20 @@ tsuim_reverse_lookup_hidepinyin:
 
 
 #### 中文反查模式的設定 (3) -- 如果漢字詞有台語注音，就在候選項後面顯示
-tsuim_reverse_lookup:
-  tags: [ zhuyin ]
+cu_im_reverse_lookup:
+  tags: [ cu_im ]
   overwrite_comment: true
-  dictionary: moetaigi.unspaced
+  dictionary: holok_cu_im.unspaced
   comment_format:
     __patch:
-      - tsuim:/pinyin_to_tsuim
-      - tsuim:/keymap_bopomofo
-      - tsuim:/bopomofo_symbols
+      - cu_im:/phing_im_tng_cu_im
+      - cu_im:/keymap_bopomofo
+      - cu_im:/bopomofo_hu_ho
 
 
 # custom_reverse_lookup:
 #   tag: custom_reverse_lookup
-#   dictionary: cangjie5 # luna_pinyin # cangjie5
+#   dictionary: cangjie5 # luna_cu_im # cangjie5
 #   enable_completion: false
 #   enable_sentence: false
 #   enable_user_dict: true
@@ -167,27 +167,27 @@ tsuim_reverse_lookup:
 #    - 'xform/\\/ /'
 
 # reverse_lookup:
-#   dictionary: moetaigi # luna_pinyin # moetaigi-tsuim-index #  # 新增了字典檔 可能用不上
+#   dictionary: holok # luna_cu_im # holok-cu_im-index #  # 新增了字典檔 可能用不上
 #   prefix: "`"
 #   tips: 〔學習模式〕
 #   preedit_format:
 #     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
 #   comment_format:
 #     __patch:
-#       - tsuim:/pinyin_to_tsuim
-#       - tsuim:/keymap_bopomofo
-#       - tsuim:/bopomofo_symbols
+#       - cu_im:/phing_im_tng_cu_im
+#       - cu_im:/keymap_bopomofo
+#       - cu_im:/bopomofo_hu_ho
 
 
 
 #reverse_lookup:
-#  dictionary: luna_pinyin
+#  dictionary: luna_cu_im
 #  prefix: "`"
 #  tips: 〔拼音〕
 #  preedit_format:
 #    - xform/([nljqxy])v/$1ü/
 
-# tsuim_reverse_lookup:
+# cu_im_reverse_lookup:
 #   tags: [ custom_reverse_lookup ]
 #   overwrite_comment: true
 #   dictionary: bopomo_onion.extended
@@ -219,7 +219,7 @@ tsuim_reverse_lookup:
 #     - 'xlit|bpmfdtnlgkhjqxZCSrzcsiuvaoeEAIOUMNKGR2345|ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦˊˇˋ˙|'
 
 punctuator:
-  # import_preset: moetaigi-tsuim-symbols  # (之後視情況可能會移到這裡放)
+  # import_preset: holok-cu_im-symbols  # (之後視情況可能會移到這裡放)
   #### 依照教育部《重訂標點符號手冊》排序
   #### https://language.moe.gov.tw/001/upload/files/site_content/m0001/hau/haushou.htm
   full_shape: &symtable
@@ -253,7 +253,7 @@ recognizer:
     # reverse_lookup: "`.*$"
     # custom_reverse_lookup: "`[a-z]*$"   # wrong pattern
     learning: "'.*$"
-    zhuyin: "`.*$"
+    cu_im: "`.*$"
 
 editor:
   bindings:
@@ -289,7 +289,7 @@ style:
   #### 1. 某些字不遵守正體漢字在臺灣的規範寫法。 (例如「骨」、「過」)
   #### 2. 少部分位於 Unicode 擴展區的臺語漢字無法正常顯示。 (例如「足百」山)
   #### 因此，本輸入法需要使用者預先安裝指定的字型「源樣黑體」的 Light 字重版本。
-  font_face: 源樣黑體 L
+  # font_face: 源樣黑體 L
   #### 如果您較喜歡 Regular 字重，也可手動切換為源樣黑體 R。
   # font_face: 源樣黑體 R
   #### 下列其他字型可滿足部分的需求：
@@ -314,3 +314,4 @@ style:
   #   min_width: 160
   #   round_corner: 4
   #   spacing: 10
+
