@@ -1,0 +1,316 @@
+# Rime schema
+# vim: set sw=2 sts=2 et:
+# encoding: utf-8
+
+schema:
+  schema_id: moetaigi-tsuim
+  name: 萌台語-注音
+  version: "0.3"
+  author: 
+    - 鄭懷傑 whyjz <whyjayzheng@gmail.com>
+  description: 基於萌典 API 的 RIME 臺語注音輸入法。
+  dependencies: 
+    - moetaigi.unspaced
+  #   - luna_pinyin
+  #   - moetaigi-test
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半形, 全形 ]
+  # - name: ascii_punct
+  #   states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - fluency_editor
+    #### 0.2 版 (含) 之前使用的是沒有佇列功能的 express_editor。
+    #### 為了更彈性地選字，0.3 板之後換為 fluency_editor。
+    # - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - affix_segmentor@learning
+    - affix_segmentor@zhuyin
+    # - affix_segmentor@pinyin
+    - punct_segmentor
+    - fallback_segmentor
+    # - affix_segmentor@custom_reverse_lookup
+  translators:
+    # - echo_translator
+    - punct_translator
+    - script_translator
+    # - r10n_translator    # aka script_translator
+    # - reverse_lookup_translator
+    - script_translator@learning
+    # - table_translator@bopomo_onion_phrase
+    - script_translator@zhuyin
+  filters:
+    - simplifier
+    - uniquifier
+    - reverse_lookup_filter@tsuim_reverse_lookup_hidepinyin
+    - reverse_lookup_filter@tsuim_reverse_lookup
+    # - reverse_lookup_filter@bpm_reverse_lookup
+
+#### 候選字列表中的編號保持預設 (1234567...)。
+# menu:
+#   alternative_select_keys: "1234567"
+
+speller:
+  alphabet: '1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657'
+  initials: '1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ43btgz657'
+  finals: " 43657"
+  delimiter: "'"
+  use_space: true
+  algebra:
+    __patch:
+      - tsuim:/pinyin_to_tsuim
+      - tsuim:/abbreviation
+      - tsuim:/keymap_bopomofo
+
+translator:
+  dictionary: moetaigi
+  prism: tsuim
+  spelling_hints: 0
+  # enable_sentence: true
+  preedit_format:
+    - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
+  # comment_format:
+  #   __patch:
+  #     - tsuim:/pinyin_to_tsuim
+  #     - tsuim:/keymap_bopomofo
+  #     - tsuim:/bopomofo_symbols
+
+#### 注音顯示模式的設定
+learning:
+  tag: learning
+  dictionary: moetaigi
+  prism: tsuim
+  tips: 《注音顯示》
+  spelling_hints: 6
+  prefix: "'"    # 啟動碼
+  preedit_format:
+    - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
+    - xform/^/《注音顯示》/
+  comment_format:
+    __patch:
+      - tsuim:/pinyin_to_tsuim
+      - tsuim:/keymap_bopomofo
+      - tsuim:/bopomofo_symbols
+
+#### 中文反查模式的設定 (1) -- 利用中文注音打出字
+zhuyin:
+  tag: zhuyin
+  dictionary: terra_pinyin # luna_pinyin
+  prism: bopomofo_tw
+  prefix: "`"    # 啟動碼
+  # suffix: ;
+  spelling_hints: 6
+  preedit_format:
+    - "xlit|1qaz2wsxedcrfv5tgbyhnujm8ik,9ol.0p;/- 6347'|ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦˉˊˇˋ˙ |"
+    - xform/^/《中文反查》/
+    # - xform/([nl])v/$1ü/
+    # - xform/([nl])ue/$1üe/
+    # - xform/([jqxy])v/$1u/
+  tips: 《中文反查》
+  # closing_tips: 【蒼頡】
+  # initial_quality: 0.2  # 調整該編譯器出字優先度
+
+#### 中文注音反查的設定 (2) -- 對於不存在台語注音的漢字詞，在註解中把拼音隱藏起來，並顯示【無台語注音】
+tsuim_reverse_lookup_hidepinyin:
+  tags: [ zhuyin ]
+  overwrite_comment: true
+  dictionary: terra_pinyin
+  comment_format:
+    # - erase/^.*$/
+    - xform/^.*$/【無台語注音】/
+    # - xform/d/ /
+
+
+#### 中文反查模式的設定 (3) -- 如果漢字詞有台語注音，就在候選項後面顯示
+tsuim_reverse_lookup:
+  tags: [ zhuyin ]
+  overwrite_comment: true
+  dictionary: moetaigi.unspaced
+  comment_format:
+    __patch:
+      - tsuim:/pinyin_to_tsuim
+      - tsuim:/keymap_bopomofo
+      - tsuim:/bopomofo_symbols
+
+
+# custom_reverse_lookup:
+#   tag: custom_reverse_lookup
+#   dictionary: cangjie5 # luna_pinyin # cangjie5
+#   enable_completion: false
+#   enable_sentence: false
+#   enable_user_dict: true
+#   # prefix: "`"
+#   prefix: "="
+#   suffix: " "
+#   tips: "《喔喔4》"
+#   preedit_format:
+#   #   - xform/([nljqxy])v/$1ü/
+#    - "xlit|abcdefghijklmnopqrstuvwxyz|ABCDEFGHIJKLMNOPQRSTUVWXYZ|"
+#    - "xlit|abcdefghijklmnopqrstuvwxyz|日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜符|"
+#    - xform/^/《反查》/
+#    - 'xform/\\/ /'
+
+# reverse_lookup:
+#   dictionary: moetaigi # luna_pinyin # moetaigi-tsuim-index #  # 新增了字典檔 可能用不上
+#   prefix: "`"
+#   tips: 〔學習模式〕
+#   preedit_format:
+#     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
+#   comment_format:
+#     __patch:
+#       - tsuim:/pinyin_to_tsuim
+#       - tsuim:/keymap_bopomofo
+#       - tsuim:/bopomofo_symbols
+
+
+
+#reverse_lookup:
+#  dictionary: luna_pinyin
+#  prefix: "`"
+#  tips: 〔拼音〕
+#  preedit_format:
+#    - xform/([nljqxy])v/$1ü/
+
+# tsuim_reverse_lookup:
+#   tags: [ custom_reverse_lookup ]
+#   overwrite_comment: true
+#   dictionary: bopomo_onion.extended
+#   comment_format:
+#     - xform/iu/iou/
+#     - xform/ui/uei/
+#     - xform/ong/ung/
+#     - xform/yi?/i/
+#     - xform/wu?/u/
+#     - xform/iu/v/
+#     - xform/([jqx])u/$1v/
+#     - xform/([iuv])n/$1en/
+#     - xform/zhi?/Z/
+#     - xform/chi?/C/
+#     - xform/shi?/S/
+#     - xform/([zcsr])i/$1/
+#     - xform/ai/A/
+#     - xform/ei/I/
+#     - xform/ao/O/
+#     - xform/ou/U/
+#     - xform/ang/K/
+#     - xform/eng/G/
+#     - xform/an/M/
+#     - xform/en/N/
+#     - xform/er/R/
+#     - xform/eh/E/
+#     - xform/([iv])e/$1E/
+#     - xform/1//
+#     - 'xlit|bpmfdtnlgkhjqxZCSrzcsiuvaoeEAIOUMNKGR2345|ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦˊˇˋ˙|'
+
+punctuator:
+  # import_preset: moetaigi-tsuim-symbols  # (之後視情況可能會移到這裡放)
+  #### 依照教育部《重訂標點符號手冊》排序
+  #### https://language.moe.gov.tw/001/upload/files/site_content/m0001/hau/haushou.htm
+  full_shape: &symtable
+    ">" : { commit: "。" }
+    "." : { commit: "，" }
+    "\"" : { commit: "、" }
+    "\\" : { commit: "；" }
+    "=" : { commit: "：" }
+    "?" : { commit: "？" }
+    "[" : [ "「", "〈" ]
+    "]" : [ "」", "〉"]
+    "{" : { commit: "（" }
+    "}" : { commit: "）" }
+    "?" : { commit: "？" }
+    "|" : { commit: "！" }
+    "_" : { commit: "─" }
+    "+" : [ "‧" ]
+    "~" : { commit: "～" }
+  half_shape: *symtable
+  symbols:
+    "[[" : [ "『", "《" ]
+    "]]" : [ "』", "》" ]
+    "++" : [ "…" ]
+    "+++" : [ "…" ]
+
+recognizer:
+  # import_preset: default
+  patterns:
+    punct: "[[]{2}$|[]]{2}$|[+]{2,3}$"    # 比對 "[[", "]]", "++", 和 "+++"
+    # reverse_lookup: "`[a-z]*$"   # wrong pattern
+    # reverse_lookup: "`.*$"
+    # custom_reverse_lookup: "`[a-z]*$"   # wrong pattern
+    learning: "'.*$"
+    zhuyin: "`.*$"
+
+editor:
+  bindings:
+    #### 因為 space 與一聲的鍵位衝突，因此設定 NumLock 為把待選字送到佇列的按鈕，之後在 key_binder 底下再把 space 設成跟 NumLock 有一樣的功能。
+    Num_Lock: toggle_selection
+    #### Return 鍵在 fluency editor 的設定下的預設功能已經是把所有字送上螢幕。
+    # Return: confirm
+
+key_binder:
+  # import_preset: default
+  bindings:
+    #### 當有候選字列表時，space 的作用是 NumLock，如果沒有候選字列表但是有佇列時，space 的作用是把字送上螢幕。
+    - { when: composing, accept: space, send: Return }
+    - { when: has_menu, accept: space, send: Num_Lock }
+    #### 如果沒有候選字列表但是有佇列時，按下向下鍵可以再把選字列表叫回來。
+    - { when: composing, accept: Down, send: Num_Lock }
+    - { when: has_menu, accept: Down, send: Down }
+    #### 當有候選字列表時，ctrl+數字鍵相當於送出數字小鍵盤上的數字 (這樣就可以依照候選字的編號選字)
+    - { when: has_menu, accept: Control+1, send: KP_1 }
+    - { when: has_menu, accept: Control+2, send: KP_2 }
+    - { when: has_menu, accept: Control+3, send: KP_3 }
+    - { when: has_menu, accept: Control+4, send: KP_4 }
+    - { when: has_menu, accept: Control+5, send: KP_5 }
+    - { when: has_menu, accept: Control+6, send: KP_6 }
+    - { when: has_menu, accept: Control+7, send: KP_7 }
+    - { when: has_menu, accept: Control+8, send: KP_8 }
+    - { when: has_menu, accept: Control+9, send: KP_9 }
+
+
+style:
+  #### ==========================================================================================
+  #### RIME (Windows 小狼豪版) 使用微軟雅黑作為預設字型。雅黑支援所有的臺語注音符號，但是仍存在兩個問題：
+  #### 1. 某些字不遵守正體漢字在臺灣的規範寫法。 (例如「骨」、「過」)
+  #### 2. 少部分位於 Unicode 擴展區的臺語漢字無法正常顯示。 (例如「足百」山)
+  #### 因此，本輸入法需要使用者預先安裝指定的字型「源樣黑體」的 Light 字重版本。
+  font_face: 源樣黑體 L
+  #### 如果您較喜歡 Regular 字重，也可手動切換為源樣黑體 R。
+  # font_face: 源樣黑體 R
+  #### 下列其他字型可滿足部分的需求：
+  # font_face: jf open 粉圓 1.1     # 支援正體漢字規範與大部分的臺語外字，然而不支援臺語注音符號。
+  # font_face: Tauhu Oo 20.05     # 支援正體漢字規範與幾乎所有的臺語外字，然而不支援臺語注音符號。
+  # font_face: 標楷體             # 支援正體漢字規範，不支援臺語注音符號，以及許多臺語外字。
+  # font_face: 微軟正黑體         # 支援正體漢字規範以及臺語注音符號，但不支援許多臺語外字。
+  #### ==========================================================================================
+  # display_tray_icon: false
+  # font_point: 24
+  # fullscreen: false
+  # horizontal: true
+  # inline_preedit: false
+  # layout:
+  #   border_width: 3
+  #   candidate_spacing: 5
+  #   hilite_padding: 2
+  #   hilite_spacing: 4
+  #   margin_x: 12
+  #   margin_y: 6
+  #   min_height: 0
+  #   min_width: 160
+  #   round_corner: 4
+  #   spacing: 10
