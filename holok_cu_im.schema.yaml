@@ -5,7 +5,7 @@
 schema:
   schema_id: holok_cu_im
   name: 台語注音
-  version: "0.0.1.0"
+  version: "0.0.1.1"
   author:
     - 居正中 AlanJui <alanjui.1960@gmail.com>
   description: 基於萌典 API 的 RIME 臺語注音輸入法。
@@ -64,7 +64,11 @@ engine:
 
 #### 候選字列表中的編號保持預設 (1234567...)。
 # menu:
+  # alternative_select_labels: [ ①, ②, ③, ④, ⑤ ]  # 修改候選標籤
 #   alternative_select_keys: "1234567"
+menu:
+  alternative_select_labels: [ ①, ②, ③, ④, ⑤ ]  # 修改候選標籤
+  page_size: 5 #選單每䈎顯示個數
 
 speller:
   alphabet: '1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657'
@@ -86,11 +90,11 @@ translator:
   # enable_sentence: true
   preedit_format:
     - "xlit|1!qa2wsxeEdDcrRfvyYhn8*iIkoO9(lL,<m0p;:/-uUjJ 43btgz657|ㄅㆠㄆㄇㄉㄊㄋㄌㄍㆣㄎㄫㄏㄐㆢㄑㄒㄗㆡㄘㄙㄚㆩㆦㆧㄜㆤㆥㄞㆮㄠㆯㆰㆱㆬㄢㄣㄤㆲㄥㆭㄧㆪㄨㆫ ˋ˪ㆴㆵㆻㆷˊ˫˙|"
-  # comment_format:
-  #   __patch:
-  #     - cu_im:/phing_im_tng_cu_im
-  #     - cu_im:/keymap_bopomofo
-  #     - cu_im:/bopomofo_hu_ho
+  comment_format:
+    __patch:
+      - cu_im:/phing_im_tng_cu_im
+      - cu_im:/keymap_bopomofo
+      - cu_im:/bopomofo_hu_ho
 
 #### 注音顯示模式的設定
 learning:
@@ -199,7 +203,7 @@ cu_im_reverse_lookup:
 #     - xform/ui/uei/
 #     - xform/ong/ung/
 #     - xform/yi?/i/
-#     - xform/wu?/u/
+#     - xform/wu?/u/a
 #     - xform/iu/v/
 #     - xform/([jqx])u/$1v/
 #     - xform/([iuv])n/$1en/
@@ -267,13 +271,13 @@ editor:
     #---------------------------------------------------
     # space: commit                       # 選擇「備選漢字」
     Return: commit_composition          # 上屏原始的輸入：lau5
-    Control+Return: commit_script_text  # 上屏顯示的輸入：lau⁵ / lâu
-    Shift+Return: commit_comment        # 上屏候選項備注：ㄉㄚ˪〖柳交五〗
+    Control+Return: commit_comment        # 上屏候選項備注：ㄉㄚ˪〖柳交五〗
+    Shift+Return: commit_script_text  # 上屏顯示的輸入：lau⁵ / lâu
     # Control+Return: commit_raw_input    # 上屏原始的輸入：lau5
     # Control+Return: confirm    # 上屏原始的輸入：lau5
 
 key_binder:
-  # import_preset: default
+  import_preset: default
   bindings:
     #---------------------------------------------------
     #### 當有候選字列表時，space 的作用是 NumLock，如果沒有候選字列表但是有佇列時，space 的作用是把字送上螢幕。
